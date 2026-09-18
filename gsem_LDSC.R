@@ -23,18 +23,18 @@ NCORES <- 22 # One per each chromosome
 # FIRST STEP --> DOWNLOAD SUMMARY STATISTICS AN PREPARE THEM:
 
 # 1.1 Load summary statistics:
-ad_initial <- bigreadr::fread2("/home/diegoonez/project/gSEM_HDL/pap2023/AD_datasets/PGCALZ2sumstatsExcluding23andMe.txt")
+ad_initial <- bigreadr::fread2("/AD_datasets/PGCALZ2sumstatsExcluding23andMe.txt")
 str(ad_initial)
-als_initial <- bigreadr::fread2("/home/diegoonez/project/gSEM_HDL/pap2023/ALS_datasets/GCST90027164_buildGRCh37.tsv")
+als_initial <- bigreadr::fread2("AS_datasets/GCST90027164_buildGRCh37.tsv")
 str(als_initial)
-lbd_intitial <- bigreadr::fread2("/home/diegoonez/project/gSEM_HDL/pap2023/LBD_datasets/GCST90001390_buildGRCh38.tsv")
+lbd_intitial <- bigreadr::fread2("/LBD_datasets/GCST90001390_buildGRCh38.tsv")
 str(lbd_intitial)
-pd_initial <- bigreadr::fread2("/home/diegoonez/project/gSEM_HDL/pap2023/PD_datasets/nallsEtAl2019_excluding23andMe_allVariants.tab")
+pd_initial <- bigreadr::fread2("/PD_datasets/nallsEtAl2019_excluding23andMe_allVariants.tab")
 str(pd_initial)
 
 # 1.2 Identify rsIDs for each SNP based on chromosome, position, and alleles:
 ref <- read_table(
-  "/home/diegoonez/project/gSEM_HDL/1000G_phase3_common_norel.bim",
+  "/gSEM_HDL/1000G_phase3_common_norel.bim",
   col_names = c("CHR", "SNP", "CM", "BP", "A1", "A2")) %>%
   select(CHR, BP, A1, A2, SNP)
 
@@ -66,11 +66,11 @@ fwrite(pd_annot_fixed, "sumstats_PD_annot.txt", sep = "\t")
 # It produces a standardized and QC'ed version of the summary statistics. 
 
 # 2.1 Multiple-trait munge in ONE CALL
-files_munge <- c("/home/diegoonez/project/gSEM_HDL/pap2023/ldsc_APOE/sumstats_AD_annot.txt", 
-                 "/home/diegoonez/project/gSEM_HDL/pap2023/ALS_datasets/GCST90027164_buildGRCh37.tsv",
-                 "/home/diegoonez/project/gSEM_HDL/pap2023/LBD_datasets/LBD_GRCh37_ready.tsv",
-                 "/home/diegoonez/project/gSEM_HDL/pap2023/ldsc_APOE/sumstats_PD_annot.txt")
-hm3_file <- "/home/diegoonez/project/gSEM_HDL/w_hm3.snplist"
+files_munge <- c("/sumstats_AD_annot.txt", 
+                 "/ALS_datasets/GCST90027164_buildGRCh37.tsv",
+                 "/LBD_datasets/LBD_GRCh37_ready.tsv",
+                 "/PD_datasets/sumstats_PD_annot.txt")
+hm3_file <- "/w_hm3.snplist"
 trait.names <- c("AD", "ALS", "LBD", "PD")
 
 # 2.2 Munge summary statistics:
@@ -82,7 +82,7 @@ munge(
   maf.filter = 0.01,
   parallel = TRUE,
   cores = NCORES,
-  log.name = "/home/diegoonez/project/gSEM_HDL/pap2023/ldsc_APOE/munge"
+  log.name = "/ldsc_APOE/munge"
   )    
 
 
@@ -94,8 +94,8 @@ ldsc_trait <- ldsc(
   sample.prev = c(0.158, 0.197, 0.392, 0.026), # For case-control GWAS --> proportion of cases in the sample
   population.prev = c(0.05, 0.0002, 0.01, 0.01), # For case control GWAS --> True prevalence in population
   trait.names = c("AD", "ALS", "LBD", "PD"),
-  ld = "/home/diegoonez/project/gSEM_HDL/eur_w_ld_chr/", # Folder with LD scores for each SNP, split by chromosomes.
-  wld = "/home/diegoonez/project/gSEM_HDL/eur_w_ld_chr/", # Folder with regression weights used by LDSC, split by chromosomes.
+  ld = "/gSEM_HDL/eur_w_ld_chr/", # Folder with LD scores for each SNP, split by chromosomes.
+  wld = "/gSEM_HDL/eur_w_ld_chr/", # Folder with regression weights used by LDSC, split by chromosomes.
 )
 str(ldsc_trait)
 
