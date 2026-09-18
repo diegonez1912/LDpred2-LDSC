@@ -20,13 +20,13 @@ NCORES <- 22 # One per each chromosome
 # FIRST STEP --> DOWNLOAD DATA AND SUMMARY STATISTICS
 
 # 1.1 Load HapMap3+ SNP map:
-SNP_map <- readRDS("/home/diegoonez/project/ldpred2/map_hm3_plus.rds")
+SNP_map <- readRDS("/ldpred2/map_hm3_plus.rds")
 SNP_map$pos_initial <- SNP_map$pos
 SNP_map$pos <- SNP_map$pos_hg38
 str(SNP_map)
 
 # 1.2 Read external summary statistics --> A table with one row per SNP, and all of the characteristics of the SNP as columns.
-sumstats <- bigreadr::fread2("/home/diegoonez/project/ldpred2/pap2025/GCST90565439.ldpred2.tsv")
+sumstats <- bigreadr::fread2("/ldpred2/GCST90565439.ldpred2.tsv")
 sumstats$pos <- sumstats$base_pair_location
 str(sumstats)
 
@@ -71,7 +71,7 @@ df_beta$n_eff <- as.numeric(df_beta$n_eff)
 	# Thus, we just need to load the files.
 
 # 3.1 Define the path to the directory where we can find the LD references:
-ldref_dir <- "/home/diegoonez/project/ldpred2/hapmap3_plus_ldref"
+ldref_dir <- "/ldpred2/hapmap3_plus_ldref"
 
 # 3.2 Create temporary file for SFBM:
 tmp <- tempfile(tmpdir = "tmp-data")
